@@ -129,7 +129,9 @@ def map_response_model_output(BaseSchema, tag: str):
     base_schema_name: str = BaseSchema.__name__
     schema_list = []
     for domain in domain_list:
-        domain_schema_name = base_schema_name.replace('Base', domain.capitalize())
+        splits = domain.split('_')
+        domain_class = ''.join([split.capitalize() for split in splits])
+        domain_schema_name = base_schema_name.replace('Base', domain_class)
         try:
             module = dynamic_import_module(domain, f"schemas.output.{tag}")
         except ImportError as e:
@@ -137,7 +139,7 @@ def map_response_model_output(BaseSchema, tag: str):
             continue
         if hasattr(module, domain_schema_name):
             schema_class = getattr(module, domain_schema_name)
-            schema_list.append(schema_class)
+            schema_list.append(ResponseModel[schema_class])
     # if len(schema_list) < len(domain_list):
     schema_list.append(ResponseModel[BaseSchema])
 
