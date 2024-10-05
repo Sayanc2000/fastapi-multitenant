@@ -18,7 +18,7 @@ services:
     depends_on:
       - db
     volumes:
-      - .:/app
+      - .:/server/app
     ports:
       - "8000:8000"
     environment:
